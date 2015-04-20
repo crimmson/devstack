@@ -1,0 +1,141 @@
+#Header
+[[local|localrc]]
+
+#instalation directory
+DEST=/opt/stack
+
+# Enable Logging
+LOGFILE=/opt/stack/logs/stack.sh.log
+VERBOSE=True
+LOG_COLOR=True
+SCREEN_LOGDIR=/opt/stack/logs
+
+# Enable local installation
+OFFLINE=True
+
+DATABASE_PASSWORD=cdrom888
+RABBIT_PASSWORD=cdrom888
+SERVICE_TOKEN=cdrom888
+SERVICE_PASSWORD=cdrom888
+ADMIN_PASSWORD=cdrom888
+MYSQL_PASSWORD=cdrom888
+
+#KEYSTONE_TOKEN_FORMAT=UUID     #add Zepler
+
+# Branches
+NOVA_BRANCH=stable/juno
+KEYSTONE_BRANCH=stable/juno
+NEUTRON_BRANCH=stable/juno
+GLANCE_BRANCH=stable/juno
+CINDER_BRANCH=stable/juno
+SWIFT_BRANCH=stable/juno
+HEAT_BRANCH=stable/juno
+ROVE_BRANCH=stable/juno
+HORIZON_BRANCH=stable/juno
+CEILOMETER_BRANCH=stable/juno
+#NOVA_BRANCH=stable/icehouse
+#KEYSTONE_BRANCH=stable/icehouse
+#NEUTRON_BRANCH=stable/icehouse
+#GLANCE_BRANCH=stable/icehouse
+#CINDER_BRANCH=stable/icehouse
+#SWIFT_BRANCH=stable/icehouse
+#HEAT_BRANCH=stable/icehouse
+#TROVE_BRANCH=stable/icehouse
+#HORIZON_BRANCH=stable/icehouse
+#CEILOMETER_BRANCH=stable/icehouse
+
+
+
+disable_service swift
+disable_service cinder,c-vol,c-sch,c-api
+#enable_service c-api,c-sch
+#disable_service glance,g-api,g-reg
+disable_service heat,h-eng,h-api,h-api-cfn,h-api-cw
+disable_service tempest
+#disable_service g-api,g-reg
+
+LIBVIRT_TYPE=kvm
+
+#=============================================================
+#		Networkin
+#=============================================================
+SERVICE_HOST=10.10.0.2
+HOST_IP=10.10.0.3
+#FLAT_INTERFACE=enp2s0 # Interface connected to switch
+#NETWORK_GATEWAY=10.192.192.1
+
+# Decomment the part you want to be actived
+#
+# Neutron ____________________________________________________
+Q_HOST=$SERVICE_HOST
+Q_PLUGIN=ml2
+Q_ML2_TENANT_NETWORK_TYPE=vlan
+
+ENABLE_TENANT_VLANS=True
+ENABLE_TENANT_TUNNELS=False
+ML2_VLAN_RANGES=mynetwork:100:199
+
+#PUBLIC_INTERFACE=enp2s0
+
+#Neutron
+disable_service n-net # nova-network is remplaced by neutron
+# disable_service n-cpu # The Controller node should not run instances.
+#enable_service neutron
+#enable_service q-svc
+enable_service q-agt
+#enable_service q-dhcp
+#enable_service q-l3
+#enable_service q-meta
+#enable_service q-metering
+
+# Multi-host devStack
+MULTI_HOST=True
+ 
+# Neutron - Load Balancing
+#ENABLED_SERVICES+=,q-lbaas
+ 
+# Neutron - VPN as a Service
+#ENABLED_SERVICES+=,q-vpn
+ 
+# Neutron - Firewall as a Service
+#ENABLED_SERVICES+=,q-fwaas
+
+# Configure OVS
+OVS_BRIDGE_MAPPINGS=mynetwork:br-enp2s0
+OVS_PHYSICAL_BRIDGE=br-ex #br-enp2s0  #changed
+OVS_ENABLE_TUNNELING=False
+
+
+# configure console
+NOVA_VNC_ENABLED=True
+NOVNCPROXY_URL="http://10.10.0.2:6080/vnc_auto.html" # 10.10.0.2 is the Controller IP address
+VNCSERVER_LISTEN=$HOST_IP
+VNCSERVER_PROXYCLIENT_ADDRESS=$VNCSERVER_LISTEN
+
+
+# Nova - network _____________________________________________
+
+#=============================================================
+#	Service configurations
+#=============================================================
+
+# A fresh stack on every build
+#RECLONE=yes #add Zepler
+
+
+# Swift
+#enable_service s-proxy s-object s-container s-account
+#SWIFT_HASH=66a3d6b56c1f479c8b4e70ab5c2000f5
+#SWIFT_DATA_DIR=$DEST/data/swift
+#SWIFT_REPLICAS=3
+
+#
+#Trove
+#ENABLED_SERVICES+=,trove,tr-api,tr-tmgr,tr-cond
+
+#Ceilometer
+#ENABLED_SERVICES+=,ceilometer-acompute,ceilometer-acentral,ceilometer-collector,ceilometer-api
+#ENABLED_SERVICES+=,ceilometer-alarm-notify,ceilometer-alarm-eval
+#
+#Heat
+#ENABLED_SERVICES+=,heat,h-api,h-api-cfn,h-api-cw,h-eng
